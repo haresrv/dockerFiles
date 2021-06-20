@@ -1,4 +1,5 @@
-FROM openjdk:8-alpine3.9
+FROM alpine:3.11
+RUN apk add openjdk8 python2
 
 #####
 # Ant
@@ -27,9 +28,10 @@ RUN cp /tmp/antcontrib.jar /opt/installs/apache-ant-1.10.1/lib/ant-contrib.jar
 
 #NODE
 ENV ALPINE_MIRROR "http://dl-cdn.alpinelinux.org/alpine"
-RUN echo "${ALPINE_MIRROR}/v3.9/main/" >> /etc/apk/repositories
-RUN apk add -U --no-cache nghttp2-dev nodejs npm
-RUN apk add ruby --repository=http://dl-cdn.alpinelinux.org/alpine/v3.11/main
-RUN apk add rsync openssh-client
+RUN rm -f /etc/apk/repositories
+RUN echo "${ALPINE_MIRROR}/v3.11/main/" >> /etc/apk/repositories
+RUN echo "${ALPINE_MIRROR}/v3.11/community/" >> /etc/apk/repositories
+RUN apk add nghttp2 nghttp2-dev rsync openssh-client
+RUN apk add nodejs-current nodejs-npm ruby ruby-dev build-base libffi-dev
+RUN gem install sass
 RUN npm install -g grunt-cli
-RUN rm -rf /tmp/* /var/cache/apk/*
