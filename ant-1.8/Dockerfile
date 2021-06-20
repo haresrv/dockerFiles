@@ -1,22 +1,28 @@
-FROM adoptopenjdk:8-jdk-hotspot-bionic
+FROM starefossen/ruby-node:latest
 
-ENV ANT_VERSION=1.8.0
-ENV ANT_HOME=/opt/ant
+ENV ANT_VERSION=1.10.1
+ENV ANT_HOME=/opt/installs/ant
 
-# Download and extract apache ant to opt folder
-RUN curl http://archive.apache.org/dist/ant/binaries/apache-ant-1.8.0-bin.tar.gz > apache-ant-1.8.0-bin.tar.gz
+# Installation
+RUN cd /tmp \
+    && curl http://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz > apache-ant-${ANT_VERSION}-bin.tar.gz \
+    && mkdir -p ${ANT_HOME} \
+    && tar -zxf apache-ant-${ANT_VERSION}-bin.tar.gz \
+    && mv apache-ant-${ANT_VERSION}/* ${ANT_HOME}/ \
+    && rm apache-ant-${ANT_VERSION}-bin.tar.gz \
+    && rm -rf apache-ant-${ANT_VERSION} \
+    && rm -rf ${ANT_HOME}/manual
 
-RUN tar -zvxf apache-ant-${ANT_VERSION}-bin.tar.gz -C /opt/
-RUN ln -s /opt/apache-ant-${ANT_VERSION} /opt/ant
-RUN rm -f apache-ant-${ANT_VERSION}-bin.tar.gz
+ENV PATH ${PATH}:${ANT_HOME}/bin
 
-# add executables to path
-RUN update-alternatives --install "/usr/bin/ant" "ant" "/opt/ant/bin/ant" 1 
-RUN update-alternatives --set "ant" "/opt/ant/bin/ant" 
+# Ant Contrib to lib
+COPY . /tmp
+RUN mkdir -p /opt/installs/apache-ant-1.10.1/lib/
+RUN cp /tmp/antcontrib.jar /opt/installs/apache-ant-1.10.1/lib/ant-contrib.jar
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install -qq --no-install-recommends nodejs
+RUN apt-get update
+RUN apt-get install -y -qq openjdk-8-jre openjdk-8-jdk rsync openssh-client python-pip
+RUN pip install ast
 RUN npm install -g grunt-cli
+RUN gem install sass
 RUN rm -rf /var/lib/apt/lists/*
