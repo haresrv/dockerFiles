@@ -23,6 +23,6 @@ RUN cp /tmp/antcontrib.jar /opt/installs/apache-ant-1.10.1/lib/ant-contrib.jar
 RUN apt-get update
 RUN apt-get install -y -qq openjdk-8-jre openjdk-8-jdk rsync openssh-client python-pip
 RUN pip install ast
-RUN npm install -g grunt-cli
+RUN npm install --silent -g grunt-cli @angular/cli@9.1.12 node-gyp
 RUN gem install sass
 RUN rm -rf /var/lib/apt/lists/*
