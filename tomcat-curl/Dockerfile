@@ -1,4 +1,4 @@
-FROM davidcaste/alpine-java-unlimited-jce:jre7
+FROM davidcaste/alpine-java-unlimited-jce:jre8
 
 ENV TOMCAT_MAJOR=7 \
     TOMCAT_VERSION=7.0.69 \
@@ -14,8 +14,3 @@ RUN apk upgrade --update && \
     ln -s /opt/apache-tomcat-${TOMCAT_VERSION} ${TOMCAT_HOME} && \
     rm -rf ${TOMCAT_HOME}/webapps/* && \
     rm -rf /tmp/* /var/cache/apk/*
-
-COPY logging.properties ${TOMCAT_HOME}/conf/logging.properties
-COPY server.xml ${TOMCAT_HOME}/conf/server.xml
-
-VOLUME ["/logs"]
