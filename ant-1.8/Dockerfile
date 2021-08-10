@@ -18,8 +18,9 @@ ENV PATH ${PATH}:${ANT_HOME}/bin
 # Ant Contrib to lib
 COPY . /tmp
 RUN mkdir -p /opt/installs/apache-ant-1.10.1/lib/
+RUN mkdir -p /opt/jenkins
 RUN cp /tmp/antcontrib.jar /opt/installs/apache-ant-1.10.1/lib/ant-contrib.jar
-
+RUN cp /tmp/sonarqube-ant-task-2.7.1.1951.jar /opt/jenkins/sonarqube-ant-task-2.7.1.1951.jar
 ENV LANG C.UTF-8
 
 RUN groupadd --gid 1000 node \
